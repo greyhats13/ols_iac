@@ -9,6 +9,7 @@ resource "aws_subnet" "public" {
   availability_zone = element(data.aws_availability_zones.az.names, count.index)
   tags = {
     "Name"    = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[1]}-public-${element(data.aws_availability_zones.az.names, count.index)}"
+    "Unit"    = var.unit
     "Env"     = var.env
     "Code"    = var.code
     "Feature" = "subnet"
@@ -24,6 +25,7 @@ resource "aws_subnet" "node" {
   availability_zone = element(data.aws_availability_zones.az.names, count.index)
   tags = {
     "Name"                                                  = "${var.unit}-${var.env}-network-subnet-node-${element(data.aws_availability_zones.az.names, count.index)}"
+    "Unit"                                                  = var.unit
     "Env"                                                   = var.env
     "Code"                                                  = var.code
     "Feature"                                               = "subnet"
@@ -40,6 +42,7 @@ resource "aws_subnet" "app" {
   availability_zone = element(data.aws_availability_zones.az.names, count.index)
   tags = {
     "Name"    = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[1]}-app-${element(data.aws_availability_zones.az.names, count.index)}"
+    "Unit"    = var.unit
     "Env"     = var.env
     "Code"    = var.code
     "Feature" = var.feature
@@ -55,6 +58,7 @@ resource "aws_subnet" "data" {
   availability_zone = element(data.aws_availability_zones.az.names, count.index)
   tags = {
     "Name"    = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[1]}-data-${element(data.aws_availability_zones.az.names, count.index)}"
+    "Unit"    = var.unit
     "Env"     = var.env
     "Code"    = var.code
     "Feature" = var.feature

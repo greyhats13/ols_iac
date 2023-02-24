@@ -1,3 +1,4 @@
+# Naming Standard
 variable "region" {
   type        = string
   description = "AWS region"
@@ -26,4 +27,10 @@ variable "feature" {
 variable "sub" {
   type        = list(string)
   description = "the name of AWS services subfeature"
+}
+
+#S3 Arguments
+variable "acl" {
+  type        = string
+  description = "The canned ACL to apply. Defaults to private"
 }
