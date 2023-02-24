@@ -49,7 +49,7 @@ resource "aws_subnet" "app" {
 }
 
 resource "aws_subnet" "data" {
-  count             = length(data.aws_availability_zones.az.names) - 1
+  count             = length(data.aws_availability_zones.az.names)
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index + 3 * (length(data.aws_availability_zones.az.names)))
   availability_zone = element(data.aws_availability_zones.az.names, count.index)
