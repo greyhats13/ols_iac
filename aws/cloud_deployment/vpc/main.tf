@@ -1,6 +1,6 @@
 module "vpc" {
   source               = "../../modules/network"
-  region               = "us-east-1"
+  region               = "us-west-1"
   unit                 = "ols"
   env                  = "master"
   code                 = "network"
