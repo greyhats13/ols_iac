@@ -47,7 +47,7 @@ variable "enable_dns_hostnames" {
 }
 
 # #Elastic IP Arguments
-# variable "total_eip" {
-#   type = number
-#   description = "Total elastic IP"
-# }
+variable "total_eip" {
+  type = number
+  description = "Total elastic IP"
+}

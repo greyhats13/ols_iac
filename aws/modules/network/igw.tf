@@ -6,6 +6,7 @@ resource "aws_internet_gateway" "igw" {
     "Unit"    = var.unit
     "Env"     = var.env
     "Code"    = var.code
-    "Feature" = var.sub[3]
+    "Feature" = var.feature
+    "SubFeature" = var.sub[3]
   }
 }
