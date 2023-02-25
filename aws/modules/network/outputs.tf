@@ -43,3 +43,35 @@ output "data_id" {
 output "data_arn" {
     value = aws_subnet.data.*.arn
 }
+
+output "igw_id" {
+    value = aws_internet_gateway.igw.id
+}
+
+output "igw_arn" {
+    value = aws_internet_gateway.igw.arn
+}
+
+output "nat_id" {
+    value = aws_nat_gateway.nat.*.id
+}
+
+output "public_rt_id" {
+    value = aws_route_table.public_rt.id
+}
+
+output "public_rt_arn" {
+    value = aws_route_table.public_rt.arn
+}
+
+output "app_rt_id" {
+    value = aws_route_table.app_rt.*.id
+}
+
+output "app_rt_arn" {
+    value = aws_route_table.app_rt.*.arn
+}
+
+output "data_rt_id" {
+    value = aws_route_table.data_rt.*.id
+}
