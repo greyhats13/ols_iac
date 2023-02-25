@@ -1,5 +1,5 @@
 resource "aws_eip" "eip" {
-  count = var.total_eip
+  count = var.env != "master" && var.env != "dev" ? var.total_eip : 1
   vpc   = true
 
   tags = {
@@ -13,9 +13,9 @@ resource "aws_eip" "eip" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  count         = length(aws_subnet.public)
-  allocation_id = element(aws_eip.eip.*.id, count.index)
-  subnet_id     = element(aws_subnet.public.*.id, count.index)
+  count         = var.env != "master" && var.env != "dev" ? length(aws_subnet.public) : 1
+  allocation_id = var.env != "master" && var.env != "dev" ? element(aws_eip.eip.*.id, count.index) : aws_eip.eip.0.id
+  subnet_id     = var.env != "master" && var.env != "dev" ? element(aws_subnet.public.*.id, count.index) : aws_subnet.public.0.id
 
   tags = {
     "Name"       = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[2]}-${element(data.aws_availability_zones.az.names, count.index)}"
@@ -24,6 +24,6 @@ resource "aws_nat_gateway" "nat" {
     "Code"       = var.code
     "Feature"    = var.feature
     "SubFeature" = var.sub[2]
-    "Zones"   = element(data.aws_availability_zones.az.names, count.index)
+    "Zones"      = element(data.aws_availability_zones.az.names, count.index)
   }
 }

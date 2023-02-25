@@ -48,6 +48,6 @@ variable "enable_dns_hostnames" {
 
 # #Elastic IP Arguments
 variable "total_eip" {
-  type = number
+  type        = number
   description = "Total elastic IP"
 }

@@ -7,11 +7,11 @@ resource "aws_kms_key" "kms" {
   customer_master_key_spec = var.customer_master_key_spec
   policy                   = var.policy
   tags = {
-    "Name"    = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[0]}"
-    "Unit"    = var.unit
-    "Env"     = var.env
-    "Code"    = var.code
-    "Feature" = var.feature
+    "Name"       = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[0]}"
+    "Unit"       = var.unit
+    "Env"        = var.env
+    "Code"       = var.code
+    "Feature"    = var.feature
     "SubFeature" = var.sub[0]
   }
 }

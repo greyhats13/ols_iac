@@ -30,8 +30,8 @@ variable "sub" {
 }
 
 variable "description" {
-    type = string
-    description = "kms descripption"
+  type        = string
+  description = "kms descripption"
 }
 
 variable "deletion_window_in_days" {

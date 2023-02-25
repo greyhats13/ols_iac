@@ -1,21 +1,3 @@
-data "terraform_remote_state" "network" {
-  backend = "s3"
-  config = {
-    bucket = "${var.unit}-${var.env}-storage-s3-iac"
-    key    = "vpc/${var.unit}-${var.env}-network-vpc-main.tfstate"
-    region = var.region
-  }
-}
-
-data "terraform_remote_state" "kms_general" {
-  backend = "s3"
-  config = {
-    bucket = "${var.unit}-${var.env}-storage-s3-iac"
-    key    = "kms/${var.unit}-${var.env}-security-kms-general.tfstate"
-    region = var.region
-  }
-}
-
 resource "aws_iam_role" "eks_role" {
   name = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[0]}-role"
 
@@ -50,16 +32,19 @@ resource "aws_iam_role_policy_attachment" "eks_pods_sg_attachment" {
 resource "aws_eks_cluster" "cluster" {
   name     = "${var.unit}-${var.env}-${var.code}-${var.feature}-${var.sub[0]}"
   role_arn = aws_iam_role.eks_role.arn
+  version  = var.k8s_version
 
   vpc_config {
-    subnet_ids = data.terraform_remote_state.network.outputs.network_public_subnet_id
-    endpoint_private_access = true
-    endpoint_public_access = true
+    subnet_ids              = var.subnet_ids
+    security_group_ids      = [aws_security_group.cluster.id]
+    public_access_cidrs     = var.public_access_cidrs
+    endpoint_private_access = var.endpoint_private_access
+    endpoint_public_access  = var.endpoint_public_access
   }
 
   encryption_config {
     provider {
-      key_arn = data.terraform_remote_state.kms_general.outputs.kms_general_key_arn
+      key_arn = var.key_arn
     }
     resources = ["secrets"]
   }

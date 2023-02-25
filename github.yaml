@@ -1,0 +1,53 @@
+name: Terraform Plan and Apply
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-west-2
+  TERRAFORM_PATH: "path/to/your/terraform/code"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check if changes are in Terraform path
+      id: check-path
+      run: |
+        CHANGED_FILES=$(git diff HEAD HEAD~ --name-only)
+        TERRAFORM_CHANGED=$(echo "$CHANGED_FILES" | grep "${{ env.TERRAFORM_PATH }}")
+        if [ -n "$TERRAFORM_CHANGED" ]; then
+          echo "::set-output name=terraform_changed::true"
+        else
+          echo "::set-output name=terraform_changed::false"
+        fi
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.15.5
+
+    - name: Configure AWS credentials using IAM Role
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        role-arn: "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME"
+        profile-name: default
+
+    - name: Terraform Init
+      if: steps.check-path.outputs.terraform_changed == 'true'
+      run: terraform init -input=false
+
+    - name: Terraform Plan
+      if: steps.check-path.outputs.terraform_killed == 'true'
+      run: terraform plan -input=false -out=tfplan
+
+    - name: Terraform Apply
+      if: steps.check-path.outputs.terraform_changed == 'true'
+      run: terraform apply -input=false tfplan

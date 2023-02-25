@@ -10,16 +10,6 @@ resource "aws_s3_bucket" "s3" {
   }
 }
 
-# import kms arn from kms module output tfstate s3 bucket
-data "terraform_remote_state" "kms_general" {
-  backend = "s3"
-  config = {
-    bucket = "${var.unit}-${var.env}-storage-s3-iac"
-    key    = "kms/${var.unit}-${var.env}-security-kms-general.tfstate"
-    region = var.region
-  }
-}
-
 # add acl to s3 bucket
 resource "aws_s3_bucket_acl" "s3_acl" {
   bucket = aws_s3_bucket.s3.id
@@ -42,8 +32,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3_serverside_enc
   bucket = aws_s3_bucket.s3.id
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = data.terraform_remote_state.kms_general.outputs.kms_general_key_arn
-      sse_algorithm     = "aws:kms"
+      kms_master_key_id = var.kms_master_key_id
+      sse_algorithm     = var.sse_algorithm
     }
   }
 }
